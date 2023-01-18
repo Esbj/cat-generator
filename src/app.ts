@@ -5,7 +5,7 @@ const baseUrl = "https://api.thecatapi.com/v1/images/search";
 let url =
   "https://api.thecatapi.com/v1/images/search?category_ids=4&api_key=live_Wg9vMl1FRnMcvYGi5AWc5F1Afxoax8QkjKjtZJW6eN0VI29W7OdLiDexi2P4Pth5";
 
-const CATegories = [
+const CATegoriesArr = [
   { id: 1, name: "hats" },
   { id: 2, name: "space" },
   { id: 4, name: "sunglasses" },
@@ -15,19 +15,44 @@ const CATegories = [
   { id: 15, name: "clothes" }
 ];
 
+const CATegories = {
+  hats: 1,
+  space: 2,
+  sunglasses: 4,
+  boxes: 5,
+  ties: 7,
+  sinks: 14,
+  clothes: 15
+};
+
 const button = document.querySelector("button#cat-button") as HTMLButtonElement;
-const main = document.querySelector("main") as HTMLElement
-const imageEl = document.querySelector("img")
-console.log(imageEl)
+const main = document.querySelector("main") as HTMLElement;
+const imageEl = document.querySelector("img");
 
+button.addEventListener("click", async function (event: Event): Promise<void> {
+  event.preventDefault();
+  let checkboxes = document.querySelectorAll(
+    'input[type="checkbox"]'
+  ) as NodeList;
 
-button.addEventListener("click", async function (event:Event): Promise<void> {
-  event.preventDefault()  
-  console.log("click")
-  let catRes = await fetch(url)
+  let checkedCheckboxes: HTMLInputElement[] = [];
+  for (let i = 0; i < checkboxes.length; i++) {
+    const checkbox = checkboxes[i] as HTMLInputElement;
+    if (checkbox.checked) {
+      checkedCheckboxes.push(checkbox);
+    }
+  }
+
+  /* 
+    1. Kolla vilka checkbox är ticked
+    2. Lägg varige checkbox id / name i en string arr
+    3. Matcha string arr mot obj med kategoriernas id siffra
+  */
+  for (const checkbox of checkedCheckboxes) {
+    console.log(checkbox.id);
+  }
+  console.log(checkedCheckboxes)
+  let catRes = await fetch(`${baseUrl}?category_ids=2`);
   let catData = await catRes.json();
-
-  console.log(await catData[0].url);
-  imageEl?.setAttribute("src", await catData[0].url)
-  
+  imageEl?.setAttribute("src", await catData[0].url);
 });
