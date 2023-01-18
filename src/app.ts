@@ -21,25 +21,12 @@ const imageEl = document.querySelector("image")
 
 
 
-button.addEventListener("click", async function (): Promise<void> {
-  
-  const catRes = fetch(url)
-  .then((response) =>
-    response.json()
-  .then(
-    function(data) {
-    return data
-    // imageEl.setAttribute("src", data[0].url)
+button.addEventListener("click", async function (event:Event): Promise<void> {
+  event.preventDefault()  
 
-  })
-  );
-  console.log(await catRes)
+  let catRes = await fetch(url)
+  let catData = await catRes.json();
+
+  return await catData;
   
 });
-
-
-// function(data) {
-//   const imageEl = document.createElement("image")
-//   imageEl.setAttribute("src", data[0].url
-//   main.append(imageEl)
-// }
