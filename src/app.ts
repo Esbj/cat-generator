@@ -17,16 +17,17 @@ const CATegories = [
 
 const button = document.querySelector("button#cat-button") as HTMLButtonElement;
 const main = document.querySelector("main") as HTMLElement
-const imageEl = document.querySelector("image")
-
+const imageEl = document.querySelector("img")
+console.log(imageEl)
 
 
 button.addEventListener("click", async function (event:Event): Promise<void> {
   event.preventDefault()  
-
+  console.log("click")
   let catRes = await fetch(url)
   let catData = await catRes.json();
 
-  return await catData;
+  console.log(await catData[0].url);
+  imageEl?.setAttribute("src", await catData[0].url)
   
 });
