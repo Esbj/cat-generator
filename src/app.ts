@@ -1,5 +1,5 @@
 const key =
-  "live_Wg9vMl1FRnMcvYGi5AWc5F1Afxoax8QkjKjtZJW6eN0VI29W7OdLiDexi2P4Pth5";
+  "&api_key=live_Wg9vMl1FRnMcvYGi5AWc5F1Afxoax8QkjKjtZJW6eN0VI29W7OdLiDexi2P4Pth5";
 const baseUrl = "https://api.thecatapi.com/v1/images/search";
 
 let url =
@@ -31,15 +31,29 @@ const imageEl = document.querySelector("img");
 
 button.addEventListener("click", async function (event: Event): Promise<void> {
   event.preventDefault();
-  const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked') as NodeList;
-  console.log(checkboxes)
+  const checkboxes = document.querySelectorAll(
+    'input[type="checkbox"]:checked'
+  ) as NodeList;
+  let checked: string[] = [];
+  checkboxes.forEach((c) => {
+    let input = c as HTMLInputElement;
+    checked.push(input.id);
+  });
 
+  console.log(checked.toString());
   /* 
+    0. Töm bilderna och visa loading gif
     1. Kolla vilka checkbox är ticked
     2. Lägg varige checkbox id / name i en string arr
-    3. Matcha string arr mot obj med kategoriernas id siffra
+    3. Loopa igenom kategorierna
+    4. Fetcha med hjälp av obj och namn på checkbox, spara bild url i egen arr
+    5. Skapa lika många bilder som arrayen har element. 
+    6. Ta bort loading gif och visa bilderna
   */
-  let catRes = await fetch(`${baseUrl}?category_ids=2`);
+  url = `${baseUrl}?category_ids=1,2${key}`
+  console.log(url)
+  let catRes = await fetch(url);
   let catData = await catRes.json();
-  imageEl?.setAttribute("src", await catData[0].url);
+  console.log(catData);
+  // imageEl?.setAttribute("src", await catData[0].url);
 });
