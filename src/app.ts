@@ -14,8 +14,10 @@ const CATegoriesArr = [
   { id: 14, name: "sinks" },
   { id: 15, name: "clothes" }
 ];
-
-const CATegories = {
+interface ICATegories {
+  [index: string]: number;
+}
+const CATegories: ICATegories = {
   hats: 1,
   space: 2,
   sunglasses: 4,
@@ -26,11 +28,9 @@ const CATegories = {
 };
 
 const button = document.querySelector("button#cat-button") as HTMLButtonElement;
-const main = document.querySelector("main") as HTMLElement;
-const imageEl = document.querySelector("img");
+const imgHolder = document.querySelector("div#image-holder") as HTMLDivElement;
 
-button.addEventListener("click", async function (event: Event): Promise<void> {
-  event.preventDefault();
+button.addEventListener("click", async function (): Promise<void> {
   const checkboxes = document.querySelectorAll(
     'input[type="checkbox"]:checked'
   ) as NodeList;
@@ -40,7 +40,6 @@ button.addEventListener("click", async function (event: Event): Promise<void> {
     checked.push(input.id);
   });
 
-  console.log(checked.toString());
   /* 
     0. Töm bilderna och visa loading gif
     1. Kolla vilka checkbox är ticked
@@ -50,10 +49,16 @@ button.addEventListener("click", async function (event: Event): Promise<void> {
     5. Skapa lika många bilder som arrayen har element. 
     6. Ta bort loading gif och visa bilderna
   */
-  url = `${baseUrl}?category_ids=1,2${key}`
-  console.log(url)
-  let catRes = await fetch(url);
-  let catData = await catRes.json();
-  console.log(catData);
-  // imageEl?.setAttribute("src", await catData[0].url);
+
+  for (const category of checked) {
+    console.log(category);
+    url = `${baseUrl}?category_ids=${CATegories[category]}${key}`;
+    console.log(url);
+    let catRes = await fetch(url);
+    let catData = await catRes.json();
+    console.log(catData[0].url);
+    let imgEl = document.createElement("img");
+    imgEl.setAttribute("src", catData[0].url);
+    imgHolder.append(imgEl);
+  }
 });
