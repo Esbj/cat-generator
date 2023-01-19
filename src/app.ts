@@ -3,17 +3,7 @@ const key =
 const baseUrl = "https://api.thecatapi.com/v1/images/search";
 
 let url =
-  "https://api.thecatapi.com/v1/images/search?category_ids=4&api_key=live_Wg9vMl1FRnMcvYGi5AWc5F1Afxoax8QkjKjtZJW6eN0VI29W7OdLiDexi2P4Pth5";
-
-const CATegoriesArr = [
-  { id: 1, name: "hats" },
-  { id: 2, name: "space" },
-  { id: 4, name: "sunglasses" },
-  { id: 5, name: "boxes" },
-  { id: 7, name: "ties" },
-  { id: 14, name: "sinks" },
-  { id: 15, name: "clothes" }
-];
+  "https://api.thecatapi.com/v1/images/search?";
 interface ICATegories {
   [index: string]: number;
 }
@@ -31,6 +21,7 @@ const button = document.querySelector("button#cat-button") as HTMLButtonElement;
 const imgHolder = document.querySelector("div#image-holder") as HTMLDivElement;
 
 button.addEventListener("click", async function (): Promise<void> {
+  imgHolder.innerHTML=""
   const checkboxes = document.querySelectorAll(
     'input[type="checkbox"]:checked'
   ) as NodeList;
@@ -49,16 +40,23 @@ button.addEventListener("click", async function (): Promise<void> {
     5. Skapa lika många bilder som arrayen har element. 
     6. Ta bort loading gif och visa bilderna
   */
-
-  for (const category of checked) {
-    console.log(category);
-    url = `${baseUrl}?category_ids=${CATegories[category]}${key}`;
-    console.log(url);
+  if (CATegories.length > 0) {
+    for (const category of checked) {
+      console.log(category);
+      url = `${baseUrl}?category_ids=${CATegories[category]}${key}`;
+      console.log(url);
+      let catRes = await fetch(url);
+      let catData = await catRes.json();
+      console.log(catData[0].url);
+      let imgEl = document.createElement("img");
+      imgEl.setAttribute("src", catData[0].url);
+      imgHolder.append(imgEl);
+    }
+  }else{
     let catRes = await fetch(url);
     let catData = await catRes.json();
-    console.log(catData[0].url);
-    let imgEl = document.createElement("img");
-    imgEl.setAttribute("src", catData[0].url);
-    imgHolder.append(imgEl);
+    let img = document.createElement("img");
+    img.setAttribute("src", catData[0].url);
+    imgHolder.append(img);
   }
 });
