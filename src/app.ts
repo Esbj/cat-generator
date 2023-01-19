@@ -31,27 +31,14 @@ const imageEl = document.querySelector("img");
 
 button.addEventListener("click", async function (event: Event): Promise<void> {
   event.preventDefault();
-  let checkboxes = document.querySelectorAll(
-    'input[type="checkbox"]'
-  ) as NodeList;
-
-  let checkedCheckboxes: HTMLInputElement[] = [];
-  for (let i = 0; i < checkboxes.length; i++) {
-    const checkbox = checkboxes[i] as HTMLInputElement;
-    if (checkbox.checked) {
-      checkedCheckboxes.push(checkbox);
-    }
-  }
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked') as NodeList;
+  console.log(checkboxes)
 
   /* 
     1. Kolla vilka checkbox är ticked
     2. Lägg varige checkbox id / name i en string arr
     3. Matcha string arr mot obj med kategoriernas id siffra
   */
-  for (const checkbox of checkedCheckboxes) {
-    console.log(checkbox.id);
-  }
-  console.log(checkedCheckboxes)
   let catRes = await fetch(`${baseUrl}?category_ids=2`);
   let catData = await catRes.json();
   imageEl?.setAttribute("src", await catData[0].url);
