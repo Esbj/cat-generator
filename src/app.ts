@@ -18,10 +18,34 @@ const Categories: Categories = {
 
 const button = document.querySelector("button#cat-button") as HTMLButtonElement;
 const imgHolder = document.querySelector("div#image-holder") as HTMLDivElement;
-const loadingImage = document.querySelector("img#loader") as HTMLImageElement;
+const loader = document.querySelector(".loader") as HTMLElement;
+const loadButton = document.querySelector("button#loader") as HTMLButtonElement;
+
+/* 
+    0. Visa loading gif
+    1. Kolla vilka checkbox är ticked ✅
+    2. Lägg varige checkbox id / name i en string arr ✅
+    3. Loopa igenom kategorierna✅
+    4. Fetcha med hjälp av obj och namn på checkbox, spara bild url i egen arr✅
+    5. Skapa lika många bilder som arrayen har element. ✅
+    6. Ta bort loading gif och visa bilderna
+  */
+
+async function catFetcher(categories?: string[]) {
+  let response: string[] = [];
+  if (categories) {
+    for (const category in categories) {
+      url = `${baseUrl}?category_ids=${categories[category]}${key}`;
+      let res = await fetch(url);
+      let data = await res.json();
+      response.push(data);
+    }
+  }
+}
+
 button.addEventListener("click", async function (): Promise<void> {
   imgHolder.innerHTML = "";
-  imgHolder.append(loadingImage)
+  loader.classList.toggle("hidden");
   const checkboxes = document.querySelectorAll(
     'input[type="checkbox"]:checked'
   ) as NodeList;
@@ -31,17 +55,8 @@ button.addEventListener("click", async function (): Promise<void> {
     checked.push(input.id);
   });
 
-  /* 
-    0. Visa loading gif
-    1. Kolla vilka checkbox är ticked ✅
-    2. Lägg varige checkbox id / name i en string arr ✅
-    3. Loopa igenom kategorierna✅
-    4. Fetcha med hjälp av obj och namn på checkbox, spara bild url i egen arr✅
-    5. Skapa lika många bilder som arrayen har element. ✅
-    6. Ta bort loading gif och visa bilderna
-  */
-  
-  if (Categories.length > 0) {
+
+  if (checked.length > 0) {
     for (const category of checked) {
       url = `${baseUrl}?category_ids=${Categories[category]}${key}`;
 
