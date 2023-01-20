@@ -34,10 +34,12 @@ async function fetchImage(url: string): Promise<HTMLImageElement> {
   let res = await fetch(url);
   let data = await res.json();
   const img = document.createElement("img");
+  console.log(await data)
   img.src = data[0].url
-  console.log(img)
   return (img);
 }
+
+
 async function catFetcher(
   categories?: string[]
 ): Promise<HTMLImageElement | HTMLImageElement[]> {
@@ -46,7 +48,7 @@ async function catFetcher(
     for (const category in categories) {
       cats.push(
         await fetchImage(
-          `${baseUrl}?category_ids=${Categories[category]}${key}`
+          `${baseUrl}?category_ids=${categories[category]}${key}`
         )
       );
     }
@@ -72,13 +74,13 @@ button.addEventListener("click", async function (event): Promise<void> {
     checked.push(input.id);
   });
 
-  console.log(checked);
   //fetcha en bild för varige kategori och printa ut den i image holder
   if (checked.length > 0) {
     const images = await catFetcher(checked);
     for (const img in images) {
       imgHolder.append(img)
     }
+    loader.classList.add("hidden")
     
     // for (const category of checked) {
     //   url = `${baseUrl}?category_ids=${Categories[category]}${key}`;
@@ -97,6 +99,9 @@ button.addEventListener("click", async function (event): Promise<void> {
     // let catData = await catRes.json();
     // let img = document.createElement("img");
     // img.setAttribute("src", catData[0].url);
-    imgHolder.append(catImage);
+    for (const img in catImage) {
+      imgHolder.append(img);
+    }
+    loader.classList.add("hidden")
   }
 });
