@@ -2,12 +2,11 @@ const key =
   "&api_key=live_Wg9vMl1FRnMcvYGi5AWc5F1Afxoax8QkjKjtZJW6eN0VI29W7OdLiDexi2P4Pth5";
 const baseUrl = "https://api.thecatapi.com/v1/images/search";
 
-let url =
-  "https://api.thecatapi.com/v1/images/search?";
-interface ICATegories {
+let url = "https://api.thecatapi.com/v1/images/search?";
+interface Categories {
   [index: string]: number;
 }
-const CATegories: ICATegories = {
+const Categories: Categories = {
   hats: 1,
   space: 2,
   sunglasses: 4,
@@ -19,9 +18,10 @@ const CATegories: ICATegories = {
 
 const button = document.querySelector("button#cat-button") as HTMLButtonElement;
 const imgHolder = document.querySelector("div#image-holder") as HTMLDivElement;
-
+const loadingImage = document.querySelector("img#loader") as HTMLImageElement;
 button.addEventListener("click", async function (): Promise<void> {
-  imgHolder.innerHTML=""
+  imgHolder.innerHTML = "";
+  imgHolder.append(loadingImage)
   const checkboxes = document.querySelectorAll(
     'input[type="checkbox"]:checked'
   ) as NodeList;
@@ -32,27 +32,27 @@ button.addEventListener("click", async function (): Promise<void> {
   });
 
   /* 
-    0. Töm bilderna och visa loading gif
-    1. Kolla vilka checkbox är ticked
-    2. Lägg varige checkbox id / name i en string arr
-    3. Loopa igenom kategorierna
-    4. Fetcha med hjälp av obj och namn på checkbox, spara bild url i egen arr
-    5. Skapa lika många bilder som arrayen har element. 
+    0. Visa loading gif
+    1. Kolla vilka checkbox är ticked ✅
+    2. Lägg varige checkbox id / name i en string arr ✅
+    3. Loopa igenom kategorierna✅
+    4. Fetcha med hjälp av obj och namn på checkbox, spara bild url i egen arr✅
+    5. Skapa lika många bilder som arrayen har element. ✅
     6. Ta bort loading gif och visa bilderna
   */
-  if (CATegories.length > 0) {
+  
+  if (Categories.length > 0) {
     for (const category of checked) {
-      console.log(category);
-      url = `${baseUrl}?category_ids=${CATegories[category]}${key}`;
-      console.log(url);
+      url = `${baseUrl}?category_ids=${Categories[category]}${key}`;
+
       let catRes = await fetch(url);
       let catData = await catRes.json();
-      console.log(catData[0].url);
+
       let imgEl = document.createElement("img");
       imgEl.setAttribute("src", catData[0].url);
       imgHolder.append(imgEl);
     }
-  }else{
+  } else {
     let catRes = await fetch(url);
     let catData = await catRes.json();
     let img = document.createElement("img");
