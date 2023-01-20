@@ -18,8 +18,7 @@ const Categories: Categories = {
 
 const button = document.querySelector("button#cat-button") as HTMLButtonElement;
 const imgHolder = document.querySelector("div#image-holder") as HTMLDivElement;
-const loader = document.querySelector(".loader") as HTMLElement;
-const loadButton = document.querySelector("button#loader") as HTMLButtonElement;
+const loader = document.querySelector(".loader") as HTMLImageElement;
 
 /* 
     0. Visa loading gif
@@ -31,47 +30,73 @@ const loadButton = document.querySelector("button#loader") as HTMLButtonElement;
     6. Ta bort loading gif och visa bilderna
   */
 
-async function catFetcher(categories?: string[]) {
-  let response: string[] = [];
+async function fetchImage(url: string): Promise<HTMLImageElement> {
+  let res = await fetch(url);
+  let data = await res.json();
+  const img = document.createElement("img");
+  img.src = data[0].url
+  console.log(img)
+  return (img);
+}
+async function catFetcher(
+  categories?: string[]
+): Promise<HTMLImageElement | HTMLImageElement[]> {
+  const cats: HTMLImageElement[] = [];
   if (categories) {
     for (const category in categories) {
-      url = `${baseUrl}?category_ids=${categories[category]}${key}`;
-      let res = await fetch(url);
-      let data = await res.json();
-      response.push(data);
+      cats.push(
+        await fetchImage(
+          `${baseUrl}?category_ids=${Categories[category]}${key}`
+        )
+      );
     }
+  } else {
+    return await fetchImage(`${baseUrl}${key}`);
   }
+  return cats;
 }
 
-button.addEventListener("click", async function (): Promise<void> {
+button.addEventListener("click", async function (event): Promise<void> {
+  event.preventDefault();
   imgHolder.innerHTML = "";
-  loader.classList.toggle("hidden");
+  loader.classList.remove("hidden");
+
+  //hämta alla kategorier, om några är valda
   const checkboxes = document.querySelectorAll(
     'input[type="checkbox"]:checked'
   ) as NodeList;
-  let checked: string[] = [];
+
+  const checked: string[] = [];
   checkboxes.forEach((c) => {
     let input = c as HTMLInputElement;
     checked.push(input.id);
   });
 
-
+  console.log(checked);
+  //fetcha en bild för varige kategori och printa ut den i image holder
   if (checked.length > 0) {
-    for (const category of checked) {
-      url = `${baseUrl}?category_ids=${Categories[category]}${key}`;
-
-      let catRes = await fetch(url);
-      let catData = await catRes.json();
-
-      let imgEl = document.createElement("img");
-      imgEl.setAttribute("src", catData[0].url);
-      imgHolder.append(imgEl);
+    const images = await catFetcher(checked);
+    for (const img in images) {
+      imgHolder.append(img)
     }
+    
+    // for (const category of checked) {
+    //   url = `${baseUrl}?category_ids=${Categories[category]}${key}`;
+
+    //   let catRes = await fetch(url);
+    //   let catData = await catRes.json();
+
+    //   let imgEl = document.createElement("img");
+    //   imgEl.setAttribute("src", catData[0].url);
+    //   imgHolder.append(imgEl);
+    // }
   } else {
-    let catRes = await fetch(url);
-    let catData = await catRes.json();
-    let img = document.createElement("img");
-    img.setAttribute("src", catData[0].url);
-    imgHolder.append(img);
+    const catImage = await catFetcher();
+
+    // let catRes = await fetch(url);
+    // let catData = await catRes.json();
+    // let img = document.createElement("img");
+    // img.setAttribute("src", catData[0].url);
+    imgHolder.append(catImage);
   }
 });
