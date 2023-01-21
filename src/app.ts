@@ -76,32 +76,38 @@ button.addEventListener("click", async function (event): Promise<void> {
 
   //fetcha en bild för varige kategori och printa ut den i image holder
   if (checked.length > 0) {
+    /* 
     const images = await catFetcher(checked);
     for (const img in images) {
       imgHolder.append(img)
     }
-    loader.classList.add("hidden")
+     */
     
-    // for (const category of checked) {
-    //   url = `${baseUrl}?category_ids=${Categories[category]}${key}`;
+    
+    for (const category of checked) {
+      url = `${baseUrl}?category_ids=${Categories[category]}${key}`;
 
-    //   let catRes = await fetch(url);
-    //   let catData = await catRes.json();
+      let catRes = await fetch(url);
+      let catData = await catRes.json();
 
-    //   let imgEl = document.createElement("img");
-    //   imgEl.setAttribute("src", catData[0].url);
-    //   imgHolder.append(imgEl);
-    // }
+      let imgEl = document.createElement("img");
+      imgEl.setAttribute("src", catData[0].url);
+      imgHolder.append(imgEl);
+    }
+    loader.classList.add("hidden")
   } else {
+    
+    let catRes = await fetch(url);
+    let catData = await catRes.json();
+    let img = document.createElement("img");
+    img.setAttribute("src", catData[0].url);
+    imgHolder.append(img);
+    /*
     const catImage = await catFetcher();
-
-    // let catRes = await fetch(url);
-    // let catData = await catRes.json();
-    // let img = document.createElement("img");
-    // img.setAttribute("src", catData[0].url);
     for (const img in catImage) {
       imgHolder.append(img);
     }
+    */
     loader.classList.add("hidden")
   }
 });
