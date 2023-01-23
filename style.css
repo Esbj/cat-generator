@@ -3,7 +3,7 @@
 }
 #image-holder{
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   gap: 10px;
   margin-top: 3rem;
 }

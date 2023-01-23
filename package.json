@@ -1,0 +1,24 @@
+{
+  "name": "cat-generator",
+  "version": "1.0.0",
+  "description": "A typescript site to fetch cats from a API with options to filter cats based on categories",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsc -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Esbj/cat-generator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Esbj/cat-generator/issues"
+  },
+  "homepage": "https://github.com/Esbj/cat-generator#readme",
+  "devDependencies": {
+    "sass": "^1.57.1"
+  }
+}
